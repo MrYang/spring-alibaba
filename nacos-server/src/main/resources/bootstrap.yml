@@ -1,0 +1,19 @@
+server:
+  port: 8601
+
+spring:
+  application:
+    name: nacos-server
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+      config:
+        server-addr: localhost:8848
+        file-extension: yaml
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
