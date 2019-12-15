@@ -26,7 +26,7 @@ public class NacosClientApplication {
     @Autowired
     private FeignSentinelService feignSentinelService;
 
-    @Reference
+    @Reference(check = false)
     private DubboService dubboService;
 
     @RequestMapping("hello")

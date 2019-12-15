@@ -18,18 +18,30 @@ public class SentinelApplication {
     }
 
     @RequestMapping("/limit/resource")
-    @SentinelResource(value = "byResource", blockHandler = "handleException")
+    @SentinelResource(value = "byResource", blockHandler = "blockHandler")
     public String resource() {
         return "资源限流";
     }
 
     @RequestMapping("/limit/url")
-    @SentinelResource(value = "byUrl")
+    @SentinelResource(value = "byUrl", blockHandler = "blockHandler")
     public String url() {
         return "url限流";
     }
 
-    public String handleException(BlockException exception) {
+    @RequestMapping("/fallback")
+    @SentinelResource(value = "fallback", fallback = "fallbackHandler")
+    public String fallback() {
+        return "如果抛出异常,走熔断方法";
+    }
+
+    // 限流处理
+    public String blockHandler(BlockException exception) {
         return "sentinel handle exception:" + exception.getClass().getCanonicalName();
+    }
+
+    // 熔断处理
+    public String fallbackHandler() {
+        return "熔断后方法";
     }
 }

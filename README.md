@@ -67,18 +67,25 @@ spring:
         ds1:
           nacos:
             server-addr: localhost:8848
-            dataId: ${spring.application.name}-sentinel
+            dataId: ${spring.application.name}-sentinel-flow
             groupId: DEFAULT_GROUP
             data-type: json
             rule-type: flow
+        ds2:
+          nacos:
+            server-addr: localhost:8848
+            dataId: ${spring.application.name}-sentinel-degrade
+            groupId: DEFAULT_GROUP
+            data-type: json
+            rule-type: degrade
 ```
 
-在nacos添加一个`sentinel-service-sentinel` dataId, 配置格式为json
+在nacos添加一个`sentinel-service-sentinel-degrade` dataId, 配置格式为json
 
 ```json
 [
     {
-        "resource": "/rateLimit/byUrl",
+        "resource": "fallback",
         "limitApp": "default",
         "grade": 1,
         "count": 1,
@@ -98,6 +105,26 @@ spring:
 - strategy：流控模式，0表示直接，1表示关联，2表示链路
 - controlBehavior：流控效果，0表示快速失败，1表示Warm Up，2表示排队等待
 - clusterMode：是否集群
+
+在nacos添加一个`sentinel-service-sentinel-flow` dataId, 配置格式为json
+
+```json
+[
+    {
+        "resource": "fallback",
+        "grade": 0,
+        "count": 500,
+        "timeWindow": 10
+    }
+]
+```
+
+各个参数为:
+
+- resource：资源名称
+- grade：阈值类型，0表示平均响应时间，1表示异常比例，2表示异常数
+- count：单机阈值
+- timeWindow：时间窗口
 
 ## dubbo
 
